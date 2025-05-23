@@ -1,0 +1,20 @@
+
+# Define the site address
+example.com {
+
+	# Set the root directory for the site
+	root * /var/www/html
+
+	# Enable file serving
+	file_server
+
+	# Reverse proxy
+	reverse_proxy /api/* localhost:9000
+
+}
+
+# Another site
+site2.example.com {
+	root * /var/www/site2
+	file_server
+}

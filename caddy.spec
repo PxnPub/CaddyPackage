@@ -60,6 +60,7 @@ echo "Install.."
 # create dirs
 %{__install} -d  \
 	"%{buildroot}%{_bindir}"                     \
+	"%{buildroot}%{_sysconfdir}/caddy"           \
 	"%{buildroot}%{_datadir}/licenses/%{name}/"  \
 	"%{buildroot}%{_datadir}/doc/%{name}/"       \
 		|| exit 1
@@ -77,6 +78,13 @@ echo "Extracting.."
 	\mv -v  "LICENSE"    "%{buildroot}%{_datadir}/licenses/%{name}/"  || exit 1
 	\mv -v  "README.md"  "%{buildroot}%{_datadir}/doc/%{name}/"       || exit 1
 \popd >/dev/null
+# example files
+\pushd  "%{_topdir}/../"  >/dev/null  || exit 1
+	%{__install} -m 0644  \
+		"Caddyfile.example"                  \
+		"%{buildroot}%{_sysconfdir}/caddy/"  \
+			|| exit 1
+\popd >/dev/null
 
 
 
@@ -86,3 +94,5 @@ echo "Extracting.."
 %doc README.md
 # bin
 %attr(0755,-,-) %{_bindir}/caddy
+%dir %{_sysconfdir}/caddy
+%{_sysconfdir}/caddy/Caddyfile.example
