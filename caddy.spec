@@ -61,12 +61,15 @@ fi
 echo -e "\nInstall..\n"
 # create dirs
 %{__install} -d  \
-	"%{buildroot}%{_bindir}"                     \
-	"%{buildroot}%{_unitdir}"                    \
-	"%{buildroot}%{_presetdir}"                  \
-	"%{buildroot}%{_sysconfdir}/caddy"           \
-	"%{buildroot}%{_datadir}/licenses/%{name}/"  \
-	"%{buildroot}%{_datadir}/doc/%{name}/"       \
+	"%{buildroot}%{_bindir}"                                          \
+	"%{buildroot}%{_unitdir}"                                         \
+	"%{buildroot}%{_presetdir}"                                       \
+	"%{buildroot}%{_sysconfdir}/caddy"                                \
+	"%{buildroot}%{_datadir}/licenses/%{name}/"                       \
+	"%{buildroot}%{_datadir}/doc/%{name}/"                            \
+	"%{buildroot}%{_localstatedir}/log/caddy/"                        \
+	"%{buildroot}%{_sharedstatedir}/caddy/.config/"                   \
+	"%{buildroot}%{_sharedstatedir}/caddy/.local/share/caddy/locks/"  \
 		|| exit 1
 # extract files
 echo -e "\nExtracting..\n"
@@ -135,3 +138,13 @@ fi
 %dir %{_sysconfdir}/caddy
 %{_sysconfdir}/caddy/caddy.env
 %{_sysconfdir}/caddy/Caddyfile.example
+# logs
+%attr(0755,caddy,caddy) %dir %{_localstatedir}/log/caddy
+# config backups
+%attr(0755,caddy,caddy) %dir %{_sharedstatedir}/caddy
+%attr(0755,caddy,caddy) %dir %{_sharedstatedir}/caddy/.config
+# locks
+%attr(0755,caddy,caddy) %dir %{_sharedstatedir}/caddy/.local
+%attr(0755,caddy,caddy) %dir %{_sharedstatedir}/caddy/.local/share
+%attr(0755,caddy,caddy) %dir %{_sharedstatedir}/caddy/.local/share/caddy
+%attr(0755,caddy,caddy) %dir %{_sharedstatedir}/caddy/.local/share/caddy/locks
