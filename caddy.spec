@@ -12,6 +12,7 @@ URL       : https://poixson.com/
 
 BuildRequires: curl wget tar jq
 BuildRequires: pxn-scripts
+BuildRequires: systemd, systemd-rpm-macros
 Provides: Caddy = %{caddy_version}
 
 %define _rpmfilename  %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
@@ -60,6 +61,8 @@ echo "Install.."
 # create dirs
 %{__install} -d  \
 	"%{buildroot}%{_bindir}"                     \
+	"%{buildroot}%{_unitdir}"                    \
+	"%{buildroot}%{_presetdir}"                  \
 	"%{buildroot}%{_sysconfdir}/caddy"           \
 	"%{buildroot}%{_datadir}/licenses/%{name}/"  \
 	"%{buildroot}%{_datadir}/doc/%{name}/"       \
@@ -80,11 +83,32 @@ echo "Extracting.."
 \popd >/dev/null
 # example files
 \pushd  "%{_topdir}/../"  >/dev/null  || exit 1
+	%{__install} -m 0644  "caddy.service"  "%{buildroot}%{_unitdir}/"    || exit 1
+	%{__install} -m 0644  "caddy.preset"   "%{buildroot}%{_presetdir}/"  || exit 1
 	%{__install} -m 0644  \
 		"Caddyfile.example"                  \
 		"%{buildroot}%{_sysconfdir}/caddy/"  \
 			|| exit 1
 \popd >/dev/null
+
+
+
+%pre
+if [[ ! -e /etc/systemd/system-preset/ ]]; then
+	\mkdir -v   /etc/systemd/system-preset  || exit 1
+	\chmod 0755 /etc/systemd/system-preset  || exit 1
+fi
+%post
+%systemd_post  caddy.service
+if [[ "$1" -eq 1 ]]; then
+	/usr/bin/systemctl  start  caddy.service  || :
+fi
+
+%preun
+%systemd_preun  caddy.service
+
+%postun
+%systemd_postun_with_restart  caddy.service
 
 
 
@@ -94,5 +118,9 @@ echo "Extracting.."
 %doc README.md
 # bin
 %attr(0755,-,-) %{_bindir}/caddy
+# systemd
+%{_unitdir}/caddy.service
+%{_presetdir}/caddy.preset
+# configs
 %dir %{_sysconfdir}/caddy
 %{_sysconfdir}/caddy/Caddyfile.example
