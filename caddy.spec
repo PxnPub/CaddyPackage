@@ -24,6 +24,7 @@ Caddy is an extensible server platform that uses TLS by default.
 
 
 
+### Build ###
 %build
 echo ; \uname -a ; echo
 LATEST_CADDY_VERSION=$( \curl "https://api.github.com/repos/caddyserver/caddy/releases/latest"  \
@@ -55,6 +56,7 @@ fi
 
 
 
+### Install ###
 %install
 echo
 echo "Install.."
@@ -81,18 +83,16 @@ echo "Extracting.."
 	\mv -v  "LICENSE"    "%{buildroot}%{_datadir}/licenses/%{name}/"  || exit 1
 	\mv -v  "README.md"  "%{buildroot}%{_datadir}/doc/%{name}/"       || exit 1
 \popd >/dev/null
-# example files
+# copy files
 \pushd  "%{_topdir}/../"  >/dev/null  || exit 1
 	%{__install} -m 0644  "caddy.service"  "%{buildroot}%{_unitdir}/"    || exit 1
 	%{__install} -m 0644  "caddy.preset"   "%{buildroot}%{_presetdir}/"  || exit 1
-	%{__install} -m 0644  \
-		"Caddyfile.example"                  \
-		"%{buildroot}%{_sysconfdir}/caddy/"  \
-			|| exit 1
+	%{__install} -m 0644  "Caddyfile.example"  "%{buildroot}%{_sysconfdir}/caddy/"  || exit 1
 \popd >/dev/null
 
 
 
+### Pre/Post ###
 %pre
 if [[ ! -e /etc/systemd/system-preset/ ]]; then
 	\mkdir -v   /etc/systemd/system-preset  || exit 1
@@ -112,6 +112,7 @@ fi
 
 
 
+### Files ###
 %files
 %defattr(0644, root, root, 0755)
 %license LICENSE
