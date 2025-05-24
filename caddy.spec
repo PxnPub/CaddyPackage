@@ -98,6 +98,13 @@ if [[ ! -e /etc/systemd/system-preset/ ]]; then
 	\mkdir -v   /etc/systemd/system-preset  || exit 1
 	\chmod 0755 /etc/systemd/system-preset  || exit 1
 fi
+\id  "caddy"  >/dev/null 2>/dev/null  || \
+	\useradd --system --user-group  \
+		--uid 808                  \
+		--shell /sbin/nologin      \
+		--home-dir /var/lib/caddy  \
+		"caddy"  || exit 1
+
 %post
 %systemd_post  caddy.service
 if [[ "$1" -eq 1 ]]; then
@@ -109,6 +116,9 @@ fi
 
 %postun
 %systemd_postun_with_restart  caddy.service
+if [[ "$1" -eq 0 ]]; then
+	\userdel --force  "caddy"
+fi
 
 
 
