@@ -71,17 +71,13 @@ echo "Install.."
 		|| exit 1
 # extract files
 echo "Extracting.."
-\pushd "%{buildroot}/" >/dev/null || exit 1
+\pushd "%{_topdir}/BUILD/" >/dev/null || exit 1
 	\tar -zx  \
 		--file="%{_topdir}/BUILD/caddy.tar.gz"  \
-		--directory="%{buildroot}/"             \
+		--directory="%{_topdir}/BUILD/"         \
 			|| exit 1
-\popd >/dev/null
-# move files
-\pushd  "%{buildroot}/"  >/dev/null  || exit 1
-	\mv -v  "caddy"      "%{buildroot}%{_bindir}/"                    || exit 1
-	\mv -v  "LICENSE"    "%{buildroot}%{_datadir}/licenses/%{name}/"  || exit 1
-	\mv -v  "README.md"  "%{buildroot}%{_datadir}/doc/%{name}/"       || exit 1
+	# bin file
+	\mv -v  "caddy"  "%{buildroot}%{_bindir}/"  || exit 1
 \popd >/dev/null
 # copy files
 \pushd  "%{_topdir}/../"  >/dev/null  || exit 1
