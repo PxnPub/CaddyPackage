@@ -40,7 +40,7 @@ if [[ "$LATEST_CADDY_VERSION" != "v"* ]]; then
 	echo -e "\nInvalid result getting latest caddy version: $LATEST_CADDY_VERSION\n" ; exit 1
 fi
 echo -e "\nCaddy version: %{caddy_version}\n"
-if [[ -f "%{_topdir}/../v%{caddy_version}.linux-amd64.tar.gz" ]]; then
+if [[ -f "%{_topdir}/../caddy-%{caddy_version}.linux-amd64.tar.gz" ]]; then
 	echo -e "\nFound existing package\n"
 else
 	echo -e "\nDownloading package.."
