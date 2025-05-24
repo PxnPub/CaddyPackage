@@ -85,11 +85,11 @@ echo "Extracting.."
 \popd >/dev/null
 # copy files
 \pushd  "%{_topdir}/../"  >/dev/null  || exit 1
-	%{__install} -m 0644  "caddy.service"  "%{buildroot}%{_unitdir}/"    || exit 1
-	%{__install} -m 0644  "caddy.preset"   "%{buildroot}%{_presetdir}/"  || exit 1
+	%{__install} -m 0644  "service/caddy.service"  "%{buildroot}%{_unitdir}/"    || exit 1
+	%{__install} -m 0644  "service/caddy.preset"   "%{buildroot}%{_presetdir}/"  || exit 1
 	%{__install} -m 0644  \
-		"caddy.env"                          \
-		"Caddyfile.example"                  \
+		"etc/caddy.env"                      \
+		"etc/Caddyfile.example"              \
 		"%{buildroot}%{_sysconfdir}/caddy/"  \
 			|| exit 1
 \popd >/dev/null
