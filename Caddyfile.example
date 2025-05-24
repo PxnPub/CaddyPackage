@@ -1,4 +1,56 @@
 
+# Global options
+{
+	conn_per_ip 10
+	conn_count 1000
+	server_tokens off
+	X-Content-Type-Options nosniff
+	X-Frame-Options SAMEORIGIN
+
+	metrics /metrics
+
+	tls {
+		on_demand
+		renew_interval 720h
+		session_tickets
+	}
+
+	timeouts {
+		read  30s
+		write 30s
+		idle   5m
+	}
+
+	# access log
+	log {
+		output file /var/log/caddy/access.log
+		roll_size 10mb
+		roll_keep 5
+		roll_keep_for 48h
+	}
+
+	# json access log
+	log {
+		output file /var/log/caddy/access.log {
+			roll_size 10mb
+			roll_keep 5
+			roll_keep_for 48h
+		}
+		format json
+	}
+
+	# error log
+	log {
+		output file /var/log/caddy/error.log
+		format console
+		level ERROR
+		roll_size 10mb
+		roll_keep 10
+	}
+}
+
+
+
 # Define the site address
 example.com {
 
@@ -10,11 +62,19 @@ example.com {
 
 	# Reverse proxy
 	reverse_proxy /api/* localhost:9000
+	header_up X-Real-IP {remote_host}
+	header_up X-Forwarded-Proto {scheme}
+
+	# let's encrypt
+	tls your@email.com
 
 }
+
+
 
 # Another site
 site2.example.com {
 	root * /var/www/site2
+	redir  http://site2.example.com  https://site2.example.com{uri}  301
 	file_server
 }
