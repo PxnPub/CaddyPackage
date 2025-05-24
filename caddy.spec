@@ -26,24 +26,24 @@ Caddy is an extensible server platform that uses TLS by default.
 
 ### Build ###
 %build
-echo ; \uname -a ; echo
+echo -e "\nBuild..\n"$( \uname -a )"\n"
 LATEST_CADDY_VERSION=$( \curl "https://api.github.com/repos/caddyserver/caddy/releases/latest"  \
 	2>/dev/null | \jq '.tag_name' )
 if [[ -z $LATEST_CADDY_VERSION ]]; then
-	echo "Failed to get latest caddy version" ; exit 1
+	echo -e "\nFailed to get latest caddy version\n" ; exit 1
 fi
 LATEST_CADDY_VERSION="${LATEST_CADDY_VERSION//\"/}"
 if [[ "$LATEST_CADDY_VERSION" != "v%{caddy_version}" ]]; then
-	echo "Invalid latest version: $LATEST_CADDY_VERSION  expected: v%{caddy_version}" ; exit 1
+	echo -e "\nInvalid latest version: $LATEST_CADDY_VERSION  expected: v%{caddy_version}\n" ; exit 1
 fi
 if [[ "$LATEST_CADDY_VERSION" != "v"* ]]; then
-	echo "Invalid result getting latest caddy version: $LATEST_CADDY_VERSION" ; exit 1
+	echo -e "\nInvalid result getting latest caddy version: $LATEST_CADDY_VERSION\n" ; exit 1
 fi
 echo -e "\nCaddy version: %{caddy_version}\n"
 if [[ -f "%{_topdir}/../v%{caddy_version}.linux-amd64.tar.gz" ]]; then
-	echo -n "Found existing package: "
+	echo -e "\nFound existing package\n"
 else
-	echo "Downloading package.."
+	echo -e "\nDownloading package.."
 	\wget -O  \
 		"%{_topdir}/../caddy-%{caddy_version}.linux-amd64.tar.gz"  \
 		"https://github.com/caddyserver/caddy/releases/download/v%{caddy_version}/caddy_%{caddy_version}_linux_amd64.tar.gz"  \
@@ -58,8 +58,7 @@ fi
 
 ### Install ###
 %install
-echo
-echo "Install.."
+echo -e "\nInstall..\n"
 # create dirs
 %{__install} -d  \
 	"%{buildroot}%{_bindir}"                     \
@@ -70,7 +69,7 @@ echo "Install.."
 	"%{buildroot}%{_datadir}/doc/%{name}/"       \
 		|| exit 1
 # extract files
-echo "Extracting.."
+echo -e "\nExtracting..\n"
 \pushd "%{_topdir}/BUILD/" >/dev/null || exit 1
 	\tar -zx  \
 		--file="%{_topdir}/BUILD/caddy.tar.gz"  \
