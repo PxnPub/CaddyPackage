@@ -87,7 +87,11 @@ echo "Extracting.."
 \pushd  "%{_topdir}/../"  >/dev/null  || exit 1
 	%{__install} -m 0644  "caddy.service"  "%{buildroot}%{_unitdir}/"    || exit 1
 	%{__install} -m 0644  "caddy.preset"   "%{buildroot}%{_presetdir}/"  || exit 1
-	%{__install} -m 0644  "Caddyfile.example"  "%{buildroot}%{_sysconfdir}/caddy/"  || exit 1
+	%{__install} -m 0644  \
+		"caddy.env"                          \
+		"Caddyfile.example"                  \
+		"%{buildroot}%{_sysconfdir}/caddy/"  \
+			|| exit 1
 \popd >/dev/null
 
 
@@ -134,4 +138,5 @@ fi
 %{_presetdir}/caddy.preset
 # configs
 %dir %{_sysconfdir}/caddy
+%{_sysconfdir}/caddy/caddy.env
 %{_sysconfdir}/caddy/Caddyfile.example
